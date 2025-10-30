@@ -4,7 +4,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git branch: 'main', url: 'https://github.com/<your-username>/<repo-name>.git'
+                git branch: 'main', url: 'https://github.com/kalai54007/student-portfolio-devops.git'
             }
         }
         stage('Install Dependencies') {
