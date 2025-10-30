@@ -34,9 +34,17 @@ function App() {
   const [editingProject, setEditingProject] = useState(null);
   const [search, setSearch] = useState("");
   const [filteredProjects, setFilteredProjects] = useState([]);
-  const [darkMode, setDarkMode] = useState(false);
+  const [darkMode, setDarkMode] = useState(true);
   const [message, setMessage] = useState("");
   const [showResults, setShowResults] = useState(false);
+  
+  useEffect(() => {
+    if (darkMode) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+  }, [darkMode]);
 
   // Initialize dark mode from localStorage
   useEffect(() => {
@@ -107,82 +115,108 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-white dark:bg-gray-900 transition-colors duration-300`}>
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        <header className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Student Portfolio Management</h1>
-          <div className="flex items-center gap-3">
-            <div className="relative flex items-center">
-              <input
-                type="text"
-                placeholder="Search by name or project..."
-                value={search}
-                onChange={handleInputChange}
-                className="w-64 h-10 px-4 rounded-l-lg border border-gray-300 dark:border-gray-600 
-                         focus:ring-2 focus:ring-blue-500 focus:border-transparent
-                         dark:bg-gray-800 dark:text-white"
-              />
-              <button
-                onClick={handleSearch}
-                className="h-10 px-6 bg-blue-500 text-white rounded-r-lg hover:bg-blue-600 
-                         transition-colors duration-300"
-              >
-                Search
-              </button>
+    <div className="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark">
+      <header className="sticky top-0 z-10 w-full bg-background-light/80 dark:bg-background-dark/80 backdrop-blur-sm border-b border-slate-200 dark:border-slate-800">
+        <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-4 text-slate-800 dark:text-white">
+              <div className="size-6 text-primary">
+                <svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+                  <path clipRule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262Z" fill="currentColor" fillRule="evenodd"/>
+                </svg>
+              </div>
+              <h1 className="text-slate-800 dark:text-white text-lg font-bold">Student Portfolio Management</h1>
             </div>
             <button
-              onClick={() => {
-                const newMode = !darkMode;
-                setDarkMode(newMode);
-                localStorage.setItem("darkMode", newMode);
-                document.documentElement.classList.toggle("dark");
-              }}
-              className="h-10 w-10 flex items-center justify-center rounded-full bg-gray-100 hover:bg-gray-200 
-                       dark:bg-gray-800 dark:hover:bg-gray-700 transition-colors duration-300"
+              onClick={() => setDarkMode(!darkMode)}
+              className="flex cursor-pointer items-center justify-center rounded-lg h-10 w-10 bg-slate-200 dark:bg-slate-700 text-slate-800 dark:text-slate-200"
             >
-              {darkMode ? "☀️" : "🌙"}
-            </button>
-            <button
-              onClick={() => exportToCSV(projects)}
-              className="h-10 flex items-center gap-2 px-4 bg-green-500 text-white rounded-lg 
-                       hover:bg-green-600 transition-colors duration-300"
-            >
-              <span>⬇️</span>
-              <span>Download CSV</span>
+              <span className="material-symbols-outlined dark:hidden">dark_mode</span>
+              <span className="material-symbols-outlined hidden dark:inline">light_mode</span>
             </button>
           </div>
-        </header>
+        </div>
+      </header>
 
-        {message && (
-          <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg dark:bg-green-800 
-                         dark:text-green-100 transition-all duration-500 transform animate-fade-in">
-            {message}
-          </div>
-        )}
-
-        <ProjectForm
-          onSave={handleSave}
-          editingProject={editingProject}
-          cancelEdit={cancelEdit}
-        />
-
-        {showResults && (
-          <div className="mt-8">
-            <div className="mb-4 border-b border-gray-200 dark:border-gray-700">
-              <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
-                {filteredProjects.length > 0 
-                  ? `Search Results (${filteredProjects.length})`
-                  : "No matching projects found"}
-              </h2>
+              <main className="flex-grow container mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-12">
+        <div className="flex flex-col gap-12">
+          {/* Form Section */}
+          <section className="bg-white dark:bg-slate-800 p-6 md:p-8 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm">
+            <div className="flex flex-wrap justify-between items-start gap-4 mb-6">
+              <div className="flex flex-col gap-2">
+                <h2 className="text-slate-900 dark:text-white text-3xl font-black tracking-tight">Add New Project</h2>
+                <p className="text-slate-500 dark:text-slate-400 text-base">Fill in the details below to add a new project to the portfolio.</p>
+              </div>
             </div>
-            <ProjectList
-              projects={filteredProjects}
-              onEdit={handleEdit}
-              onDelete={handleDelete}
+            <ProjectForm
+              onSave={handleSave}
+              editingProject={editingProject}
+              cancelEdit={cancelEdit}
             />
-          </div>
-        )}
-      </div>
+          </section>
+
+          {/* Portfolio Display Section */}
+          <section>
+            <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
+              <h2 className="text-slate-900 dark:text-white text-3xl font-black tracking-tight">Current Portfolios</h2>
+              <div className="relative w-full sm:w-auto min-w-72 flex gap-2">
+                <div className="relative flex-grow">
+                  <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
+                    search
+                  </span>
+                  <input
+                    type="text"
+                    placeholder="Search by name or title..."
+                    value={search}
+                    onChange={handleInputChange}
+                    onKeyPress={(e) => {
+                      if (e.key === 'Enter') {
+                        handleSearch();
+                      }
+                    }}
+                    className="form-input flex w-full rounded-lg text-slate-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-slate-300 dark:border-slate-600 bg-white dark:bg-slate-800 h-12 placeholder:text-slate-400 dark:placeholder:text-slate-500 pl-10 pr-4 text-base"
+                  />
+                </div>
+                <button
+                  onClick={handleSearch}
+                  className="px-6 h-12 rounded-lg bg-primary text-white hover:bg-primary/90 transition-colors flex items-center gap-2"
+                >
+                  <span className="material-symbols-outlined">search</span>
+                  Search
+                </button>
+              </div>
+            </div>
+
+            {message && (
+              <div className="mb-6 p-4 bg-green-100 text-green-700 rounded-lg dark:bg-green-800 dark:text-green-100 transition-all duration-500 animate-fade-in">
+                {message}
+              </div>
+            )}
+
+            {showResults ? (
+              <ProjectList
+                projects={filteredProjects}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ) : projects.length > 0 ? (
+              <ProjectList
+                projects={projects}
+                onEdit={handleEdit}
+                onDelete={handleDelete}
+              />
+            ) : (
+              <div className="sm:col-span-2 lg:col-span-3 flex flex-col items-center justify-center text-center bg-slate-50 dark:bg-slate-800/50 rounded-lg border-2 border-dashed border-slate-300 dark:border-slate-700 p-12">
+                <div className="w-16 h-16 rounded-full bg-primary/10 flex items-center justify-center mb-4">
+                  <span className="material-symbols-outlined text-3xl text-primary">add</span>
+                </div>
+                <h3 className="text-slate-900 dark:text-white text-lg font-bold">No projects found</h3>
+                <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Add a new project using the form above to get started.</p>
+              </div>
+            )}
+          </section>
+        </div>
+      </main>
     </div>
   );
 }
