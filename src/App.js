@@ -158,7 +158,18 @@ function App() {
           {/* Portfolio Display Section */}
           <section>
             <div className="flex flex-wrap justify-between items-center gap-4 mb-6">
-              <h2 className="text-slate-900 dark:text-white text-3xl font-black tracking-tight">Current Portfolios</h2>
+              <div className="flex items-center gap-4">
+                <h2 className="text-slate-900 dark:text-white text-3xl font-black tracking-tight">Current Portfolios</h2>
+                {projects.length > 0 && (
+                  <button
+                    onClick={() => exportToCSV(projects)}
+                    className="px-4 h-10 rounded-lg border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700 transition-colors flex items-center gap-2"
+                  >
+                    <span className="material-symbols-outlined">download</span>
+                    Export CSV
+                  </button>
+                )}
+              </div>
               <div className="relative w-full sm:w-auto min-w-72 flex gap-2">
                 <div className="relative flex-grow">
                   <span className="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-400 dark:text-slate-500">
